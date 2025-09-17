@@ -180,9 +180,10 @@ xmls.forEach((xml) => {
       ImpuestoMonto: 0.0,
       MontoTotalLinea: 0.0,
     };
-    Object.keys(summaryObj[keyTarifa]).forEach((total) => {
-      summaryObj[keyTarifa][total] += detail[total] * invoice.TipoCambio;
-      summaryObj.Totales[total] += summaryObj[keyTarifa][total];
+    Object.keys(summaryObj[keyTarifa]).forEach((key) => {
+      const amount = detail[key] * invoice.TipoCambio;
+      summaryObj[keyTarifa][key] += amount;
+      summaryObj.Totales[key] += amount;
     });
   });
 });
