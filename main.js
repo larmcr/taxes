@@ -3,6 +3,8 @@ import Papa from 'papaparse';
 import { XMLParser } from 'fast-xml-parser';
 
 const INVOICES = {
+  Clave: { path: 'FacturaElectronica.Clave', default: null },
+  CodigoActividadEmisor: { path: 'FacturaElectronica.CodigoActividadEmisor', default: null },
   NumeroConsecutivo: { path: 'FacturaElectronica.NumeroConsecutivo', default: null },
   FechaEmision: { path: 'FacturaElectronica.FechaEmision', default: null },
   Nombre: { path: 'FacturaElectronica.Emisor.Nombre', default: null },
@@ -11,7 +13,6 @@ const INVOICES = {
   IdentificacionNumero: { path: 'FacturaElectronica.Emisor.Identificacion.Numero', default: null },
   CorreoElectronico: { path: 'FacturaElectronica.Emisor.CorreoElectronico', default: null },
   CondicionVenta: { path: 'FacturaElectronica.CondicionVenta', default: null },
-  MedioPago: { path: 'FacturaElectronica.MedioPago', default: null },
   Moneda: { path: 'FacturaElectronica.ResumenFactura.CodigoTipoMoneda.CodigoMoneda', default: 'CRC' },
   TipoCambio: { path: 'FacturaElectronica.ResumenFactura.CodigoTipoMoneda.TipoCambio', default: 1.0 },
   TotalServGravados: { path: 'FacturaElectronica.ResumenFactura.TotalServGravados', default: 0.0 },
@@ -208,14 +209,16 @@ Object.keys(taxesObj).forEach((moneda) => {
 
 const summary = [];
 
-Object.keys(summaryObj).forEach((key) => {
-  Object.keys(summaryObj[key]).forEach((total) => {
-    summary.push({
-      Rubro: `${key} | ${total}`,
-      Monto: Math.round(summaryObj[key][total]),
+Object.keys(summaryObj)
+  .sort()
+  .forEach((key) => {
+    Object.keys(summaryObj[key]).forEach((total) => {
+      summary.push({
+        Rubro: `${key} | ${total}`,
+        Monto: Math.round(summaryObj[key][total]),
+      });
     });
   });
-});
 
 const invoicesCsv = Papa.unparse(invoices);
 const csvFilePath = `${CSV_PATH}/Facturas.csv`;
