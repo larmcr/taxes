@@ -20,7 +20,7 @@ const INVOICES = {
   TotalServExonerado: { path: 'FacturaElectronica.ResumenFactura.TotalServExonerado', default: 0.0 },
   TotalMercanciasGravadas: { path: 'FacturaElectronica.ResumenFactura.TotalMercanciasGravadas', default: 0.0 },
   TotalMercanciasExentas: { path: 'FacturaElectronica.ResumenFactura.TotalMercanciasExentas', default: 0.0 },
-  TotalMercExonerada: { path: 'FacturaElectronica.ResumenFactura.TotalMercExonerada', default: 0.0 },
+  TotalMercExonerada: { path: 'FactjsonuraElectronica.ResumenFactura.TotalMercExonerada', default: 0.0 },
   TotalGravado: { path: 'FacturaElectronica.ResumenFactura.TotalGravado', default: 0.0 },
   TotalExento: { path: 'FacturaElectronica.ResumenFactura.TotalExento', default: 0.0 },
   TotalExonerado: { path: 'FacturaElectronica.ResumenFactura.TotalExonerado', default: 0.0 },
@@ -29,6 +29,35 @@ const INVOICES = {
   TotalVentaNeta: { path: 'FacturaElectronica.ResumenFactura.TotalVentaNeta', default: 0.0 },
   TotalImpuesto: { path: 'FacturaElectronica.ResumenFactura.TotalImpuesto', default: 0.0 },
   TotalComprobante: { path: 'FacturaElectronica.ResumenFactura.TotalComprobante', default: 0.0 },
+};
+
+const TICKETS = {
+  Clave: { path: 'TiqueteElectronico.Clave', default: null },
+  CodigoActividadEmisor: { path: 'TiqueteElectronico.CodigoActividadEmisor', default: null },
+  NumeroConsecutivo: { path: 'TiqueteElectronico.NumeroConsecutivo', default: null },
+  FechaEmision: { path: 'TiqueteElectronico.FechaEmision', default: null },
+  Nombre: { path: 'TiqueteElectronico.Emisor.Nombre', default: null },
+  NombreComercial: { path: 'TiqueteElectronico.Emisor.NombreComercial', default: null },
+  IdentificacionTipo: { path: 'TiqueteElectronico.Emisor.Identificacion.Tipo', default: null },
+  IdentificacionNumero: { path: 'TiqueteElectronico.Emisor.Identificacion.Numero', default: null },
+  CorreoElectronico: { path: 'TiqueteElectronico.Emisor.CorreoElectronico', default: null },
+  CondicionVenta: { path: 'TiqueteElectronico.CondicionVenta', default: null },
+  Moneda: { path: 'TiqueteElectronico.ResumenFactura.CodigoTipoMoneda.CodigoMoneda', default: 'CRC' },
+  TipoCambio: { path: 'TiqueteElectronico.ResumenFactura.CodigoTipoMoneda.TipoCambio', default: 1.0 },
+  TotalServGravados: { path: 'TiqueteElectronico.ResumenFactura.TotalServGravados', default: 0.0 },
+  TotalServExentos: { path: 'TiqueteElectronico.ResumenFactura.TotalServExentos', default: 0.0 },
+  TotalServExonerado: { path: 'TiqueteElectronico.ResumenFactura.TotalServExonerado', default: 0.0 },
+  TotalMercanciasGravadas: { path: 'TiqueteElectronico.ResumenFactura.TotalMercanciasGravadas', default: 0.0 },
+  TotalMercanciasExentas: { path: 'TiqueteElectronico.ResumenFactura.TotalMercanciasExentas', default: 0.0 },
+  TotalMercExonerada: { path: 'TiqueteElectronico.ResumenFactura.TotalMercExonerada', default: 0.0 },
+  TotalGravado: { path: 'TiqueteElectronico.ResumenFactura.TotalGravado', default: 0.0 },
+  TotalExento: { path: 'TiqueteElectronico.ResumenFactura.TotalExento', default: 0.0 },
+  TotalExonerado: { path: 'TiqueteElectronico.ResumenFactura.TotalExonerado', default: 0.0 },
+  TotalVenta: { path: 'TiqueteElectronico.ResumenFactura.TotalVenta', default: 0.0 },
+  TotalDescuentos: { path: 'TiqueteElectronico.ResumenFactura.TotalDescuentos', default: 0.0 },
+  TotalVentaNeta: { path: 'TiqueteElectronico.ResumenFactura.TotalVentaNeta', default: 0.0 },
+  TotalImpuesto: { path: 'TiqueteElectronico.ResumenFactura.TotalImpuesto', default: 0.0 },
+  TotalComprobante: { path: 'TiqueteElectronico.ResumenFactura.TotalComprobante', default: 0.0 },
 };
 
 const DETAILS = {
@@ -45,7 +74,7 @@ const DETAILS = {
   NaturalezaDescuento: { path: 'Descuento.NaturalezaDescuento', default: null },
   SubTotal: { path: 'SubTotal', default: 0.0 },
   ImpuestoCodigo: { path: 'Impuesto.Codigo', default: null },
-  ImpuestoCodigoTarifa: { path: 'Impuesto.CodigoTarifa', default: null },
+  ImpuestoCodigoTarifa: { path: 'Imjsonpuesto.CodigoTarifa', default: null },
   ImpuestoTarifa: { path: 'Impuesto.Tarifa', default: 0 },
   ImpuestoMonto: { path: 'Impuesto.Monto', default: 0.0 },
   MontoTotalLinea: { path: 'MontoTotalLinea', default: 0.0 },
@@ -73,6 +102,21 @@ const getValue = (obj, path, def) => {
   return current;
 };
 
+const FILES = {
+  Factura: 'Facturas',
+  Factura: 'Tiquetes',
+};
+
+const getType = (json) => {
+  let type = '(unknown)';
+  if (json.FacturaElectronica) {
+    type = 'Factura';
+  } else if (json.TiqueteElectronico) {
+    type = 'Tiquete';
+  }
+  return type;
+};
+
 const xmls = fs.readdirSync(XML_PATH).filter((file) => file.endsWith('.xml'));
 
 const xmlParser = new XMLParser({
@@ -83,6 +127,7 @@ const xmlParser = new XMLParser({
 });
 
 const invoices = [];
+const tickets = [];
 const details = [];
 const amountsObj = {};
 const taxesObj = {};
@@ -111,19 +156,28 @@ const summaryObj = {
 };
 
 xmls.forEach((xml) => {
-  console.info(`Processing file: ${xml}`);
+  console.info(`File: ${xml}`);
   const filePath = `${XML_PATH}/${xml}`;
   const content = fs.readFileSync(filePath, 'utf8');
   const json = xmlParser.parse(content);
   const jsonFilePath = `${JSON_PATH}/${xml.replace('.xml', '.json')}`;
   fs.writeFileSync(jsonFilePath, JSON.stringify(json, null, 2), 'utf8');
-  const invoice = { Archivo: xml };
-  Object.keys(INVOICES).forEach((key) => {
-    invoice[key] = getValue(json, INVOICES[key].path, INVOICES[key].default);
-  });
-  invoices.push(invoice);
+  const type = getType(json);
+  console.info(` ↳ ${type}`);
+  const document = { Archivo: xml };
+  if (type === 'Factura') {
+    Object.keys(INVOICES).forEach((key) => {
+      document[key] = getValue(json, INVOICES[key].path, INVOICES[key].default);
+    });
+    invoices.push(document);
+  } else if (type === 'Tiquete') {
+    Object.keys(TICKETS).forEach((key) => {
+      document[key] = getValue(json, TICKETS[key].path, TICKETS[key].default);
+    });
+    tickets.push(document);
+  }
 
-  const moneda = invoice.Moneda;
+  const moneda = document.Moneda;
 
   amountsObj[moneda] = amountsObj[moneda] ?? {
     TotalServGravados: 0.0,
@@ -143,9 +197,9 @@ xmls.forEach((xml) => {
   };
 
   Object.keys(amountsObj[moneda]).forEach((total) => {
-    const item = invoice[total];
+    const item = document[total];
     amountsObj[moneda][total] += item;
-    summaryObj.Totales[total] += item * invoice.TipoCambio;
+    summaryObj.Totales[total] += item * document.TipoCambio;
   });
 
   taxesObj[moneda] = taxesObj[moneda] ?? {};
@@ -153,7 +207,7 @@ xmls.forEach((xml) => {
   const detailLine = json.FacturaElectronica?.DetalleServicio?.LineaDetalle || [];
   const detailList = detailLine && !Array.isArray(detailLine) ? [detailLine] : detailLine;
   detailList.forEach((line) => {
-    const detail = { FacturaNumeroConsecutivo: invoice.NumeroConsecutivo };
+    const detail = { FacturaNumeroConsecutivo: document.NumeroConsecutivo };
     Object.keys(DETAILS).forEach((key) => {
       detail[key] = getValue(line, DETAILS[key].path, DETAILS[key].default);
     });
@@ -182,7 +236,7 @@ xmls.forEach((xml) => {
       MontoTotalLinea: 0.0,
     };
     Object.keys(summaryObj[keyTarifa]).forEach((key) => {
-      const amount = detail[key] * invoice.TipoCambio;
+      const amount = detail[key] * document.TipoCambio;
       summaryObj[keyTarifa][key] += amount;
       summaryObj.Totales[key] += amount;
     });
@@ -219,8 +273,12 @@ Object.keys(summaryObj).forEach((key) => {
 });
 
 const invoicesCsv = Papa.unparse(invoices);
-const csvFilePath = `${CSV_PATH}/Facturas.csv`;
-fs.writeFileSync(csvFilePath, invoicesCsv, 'utf8');
+const invoicesFilePath = `${CSV_PATH}/Facturas.csv`;
+fs.writeFileSync(invoicesFilePath, invoicesCsv, 'utf8');
+
+const ticketsCsv = Papa.unparse(tickets);
+const ticketsFilePath = `${CSV_PATH}/Tiquetes.csv`;
+fs.writeFileSync(ticketsFilePath, ticketsCsv, 'utf8');
 
 const detailsCsv = Papa.unparse(details);
 const detailsCsvFilePath = `${CSV_PATH}/Detalles.csv`;
