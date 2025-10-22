@@ -209,16 +209,14 @@ Object.keys(taxesObj).forEach((moneda) => {
 
 const summary = [];
 
-Object.keys(summaryObj)
-  .sort()
-  .forEach((key) => {
-    Object.keys(summaryObj[key]).forEach((total) => {
-      summary.push({
-        Rubro: `${key} | ${total}`,
-        Monto: Math.round(summaryObj[key][total]),
-      });
+Object.keys(summaryObj).forEach((key) => {
+  Object.keys(summaryObj[key]).forEach((total) => {
+    summary.push({
+      Rubro: `${key} | ${total}`,
+      Monto: Math.round(summaryObj[key][total]),
     });
   });
+});
 
 const invoicesCsv = Papa.unparse(invoices);
 const csvFilePath = `${CSV_PATH}/Facturas.csv`;
