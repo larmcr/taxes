@@ -102,11 +102,6 @@ const getValue = (obj, path, def) => {
   return current;
 };
 
-const FILES = {
-  Factura: 'Facturas',
-  Factura: 'Tiquetes',
-};
-
 const getType = (json) => {
   let type = '(unknown)';
   if (json.FacturaElectronica) {
@@ -204,10 +199,13 @@ xmls.forEach((xml) => {
 
   taxesObj[moneda] = taxesObj[moneda] ?? {};
 
-  const detailLine = json.FacturaElectronica?.DetalleServicio?.LineaDetalle || [];
+  const detailLine =
+    json.FacturaElectronica?.DetalleServicio?.LineaDetalle ||
+    json.TiqueteElectronico?.DetalleServicio?.LineaDetalle ||
+    [];
   const detailList = detailLine && !Array.isArray(detailLine) ? [detailLine] : detailLine;
   detailList.forEach((line) => {
-    const detail = { FacturaNumeroConsecutivo: document.NumeroConsecutivo };
+    const detail = { Archivo: xml, NumeroConsecutivo: document.NumeroConsecutivo };
     Object.keys(DETAILS).forEach((key) => {
       detail[key] = getValue(line, DETAILS[key].path, DETAILS[key].default);
     });
